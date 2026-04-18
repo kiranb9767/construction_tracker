@@ -10,9 +10,19 @@ import AddItemModelForm from "../components/AddItemModelForm";
 import DeleteConfirmDialog from "../components/DeleteConfirmDialog";
 
 import BarChartComponent from "../components/BarChart";
+import { getSiteById } from "../services/siteService";
+import {
+  addMaterial,
+  addLabour,
+  updateLabour,
+  updateMaterial,
+  deleteLabour,
+  deleteMaterial,
+} from "../services/expenseService";
 
 const SiteDetailsPage = () => {
-  const id = useParams();
+  const { siteId } = useParams();
+  console.log("Site ID from URL:", siteId);
   const [curSiteDetail, setCurSiteDetail] = useState(null);
   const [activeTab, setActiveTab] = useState("materials");
 
@@ -25,104 +35,89 @@ const SiteDetailsPage = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteItem, setDeleteItem] = useState(null);
 
-
   const [showAddForm, setShowAddForm] = useState(false);
-  const handleAddItem = (newItem) => {};
+
+
+  const handleAddItem = (newItem) => {
+    console.log("Adding new item:", newItem);
+    if (activeTab === "materials") {
+      addMaterial(siteId, newItem)
+        .then((response) => {
+          console.log("Material added successfully:", response.site.Materials );
+          setMaterialList((prevList) => [...prevList, ...response.site.Materials ]);
+          setShowAddForm(false);
+        })
+        .catch((error) => {
+          console.error("Error adding material:", error);
+        });
+    } else {
+      addLabour(siteId, newItem)
+        .then((response) => {
+          console.log("Labour added successfully:", response);
+          setLabourList((prevList) => [...prevList, ...response.site.Labours]);
+          setShowAddForm(false);
+        })
+        .catch((error) => {
+          console.error("Error adding labour:", error);
+        });
+    }
+  };
 
   const handleEditItem = (updatedItem) => {};
 
-  const handleDeleteItem = () => {};
+  const handleDeleteItem = () => {
+    console.log("Deleting item:", deleteItem);
+    if (activeTab === "materials") {
+      deleteMaterial(siteId, deleteItem.itemId)
+        .then((response) => {
+          console.log("Material deleted successfully:", response);
+          setMaterialList((prevList) =>
+            prevList.filter((item) => item.id !== deleteItem.itemId)
+          );
+          setShowDeleteModal(false);
+        })
+        .catch((error) => {
+          console.error("Error deleting material:", error);
+        });
+    } else {
+      deleteLabour(siteId, deleteItem.itemId)
+        .then((response) => {
+          console.log("Labour deleted successfully:", response);
+          setLabourList((prevList) =>
+            prevList.filter((item) => item.id !== deleteItem.itemId)
+          );
+          setShowDeleteModal(false);
+        })
+        .catch((error) => {
+          console.error("Error deleting labour:", error);
+        });
+    }
+    fetchSiteDetails();
+  }
+
 
   const currentList = activeTab === "materials" ? materialList : labourList;
 
-  const dummyMaterials = [
-    {
-      id: 1,
-      name: "Cement",
-      quantity: 50,
-      price: 400,
-      brand: "UltraTech",
-      dateOfPurchase: "2026-04-01",
-      dateOfPayment: "2026-04-02",
-      mediumofPayment: "Cash",
-    },
-    {
-      id: 2,
-      name: "Steel",
-      quantity: 20,
-      price: 700,
-      brand: "Tata",
-      dateOfPurchase: "2026-04-03",
-      dateOfPayment: "2026-04-04",
-      mediumofPayment: "UPI",
-    },
-    {
-      id: 6,
-      name: "Sand",
-      quantity: 50,
-      price: 400,
-      brand: "UltraTech",
-      dateOfPurchase: "2026-04-01",
-      dateOfPayment: "2026-04-02",
-      mediumofPayment: "Cash",
-    },
-    {
-      id: 5,
-      name: "Steel",
-      quantity: 20,
-      price: 700,
-      brand: "Tata",
-      dateOfPurchase: "2026-04-03",
-      dateOfPayment: "2026-04-04",
-      mediumofPayment: "UPI",
-    },
-    {
-      id: 3,
-      name: "Cement",
-      quantity: 50,
-      price: 400,
-      brand: "UltraTech",
-      dateOfPurchase: "2026-04-01",
-      dateOfPayment: "2026-04-02",
-      mediumofPayment: "Cash",
-    },
-    {
-      id: 4,
-      name: "Breakstone",
-      quantity: 20,
-      price: 700,
-      brand: "Tata",
-      dateOfPurchase: "2026-04-03",
-      dateOfPayment: "2026-04-04",
-      mediumofPayment: "UPI",
-    },
-  ];
-
-  const dummyLabours = [
-    {
-      id: 1,
-      name: "Ramesh",
-      salary: 500,
-      date: "2026-04-01",
-      mediumofPayment: "Cash",
-    },
-    {
-      id: 2,
-      name: "Suresh",
-      salary: 600,
-      date: "2026-04-02",
-      mediumofPayment: "UPI",
-    },
-  ];
+  const fetchSiteDetails = async () => {
+    try {
+      console.log("Fetching details for site ID:", siteId);
+      console.log("type of siteId:", typeof siteId);
+      const data = await getSiteById(siteId);
+      console.log("API response for site details:", data);
+      const site = data.site;
+      console.log("Site details fetched:", site.Materials);
+      setCurSiteDetail(site);
+      setLabourList(site.Labours);
+      setMaterialList(site.Materials);
+    } catch (error) {
+      console.error("Error fetching site details:", error);
+    }
+  };
 
   // const PERCENTAGE = budget === 0 ? 0 : Math.round((spent / budget) * 100);
   useEffect(() => {
-    const siteId = Number(id.siteId);
-    const site = siteList.find((site) => site.id === siteId);
-    setCurSiteDetail(site);
-    setLabourList(site.labour || dummyLabours);
-    setMaterialList(site.materials || dummyMaterials);
-  },[]);
+    fetchSiteDetails();
+  }, [siteId]);
 
   const onEdit = (itemType, itemId) => {
     console.log("Edit", itemType, itemId);
@@ -131,21 +126,23 @@ const SiteDetailsPage = () => {
 
   const onDelete = (itemType, itemId) => {
     console.log("Delete", itemType, itemId);
+    
+    setDeleteItem({ itemType, itemId });
     setShowDeleteModal(true);
   };
 
   const addItem = (itemType) => {
     console.log("Add new", itemType);
     setShowAddForm(true);
-
   };
 
-   const getExpenseChartData = (itemList) => {
-      const map = {};
-      if(activeTab === "materials"){
+  const getExpenseChartData = (itemList) => {
+    const map = {};
+    console.log("Generating chart data for:", itemList);
+    if (activeTab === "materials") {
       itemList.forEach((item) => {
         const total = item.quantity * item.price;
-  
+
         if (map[item.name]) {
           map[item.name] += total;
         } else {
@@ -161,12 +158,11 @@ const SiteDetailsPage = () => {
         }
       });
     }
-      return Object.keys(map).map((key) => ({
-        name: key,
-        value: map[key],
-      }));
-    };
-
+    return Object.keys(map).map((key) => ({
+      name: key,
+      value: map[key],
+    }));
+  };
 
   return (
     <Layout>
@@ -229,23 +225,21 @@ const SiteDetailsPage = () => {
           onChange={(value) => setActiveTab(value)}
         />
 
-                  <div className="font-medium mt-4 text-left max-w-100 flex gap-8 border-b border-gray-500 mb-4">
-          {activeTab.toUpperCase()}  Expense Analytics
-
+        <div className="font-medium mt-4 text-left max-w-100 flex gap-8 border-b border-gray-500 mb-4">
+          {activeTab.toUpperCase()} Expense Analytics
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10 border-t pt-6">
-          <ItemList
-            items={currentList}
-            onEdit={onEdit}
-            onDelete={onDelete}
-            addItem={addItem}
-            itemType={activeTab}
-          />
-          <BarChartComponent data={getExpenseChartData(currentList)} />
+        <ItemList
+          items={currentList}
+          onEdit={onEdit}
+          onDelete={onDelete}
+          addItem={addItem}
+          itemType={activeTab}
+        />
+        <BarChartComponent data={getExpenseChartData(currentList)} />
       </div>
-
 
       {showAddForm && (
         <AddItemModelForm
@@ -255,7 +249,7 @@ const SiteDetailsPage = () => {
         />
       )}
 
-        {showEditForm && (
+      {showEditForm && (
         <AddItemModelForm
           itemType={activeTab}
           onClose={() => setShowEditForm(false)}

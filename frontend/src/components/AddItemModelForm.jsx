@@ -1,4 +1,4 @@
-const  AddItemModelForm = ({ itemType, onClose, onSubmit }) => {
+const  AddItemModelForm = ({ itemType, onClose, onAdd }) => {
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <div className="bg-white rounded-lg p-6 w-full max-w-md">
@@ -8,7 +8,12 @@ const  AddItemModelForm = ({ itemType, onClose, onSubmit }) => {
             
           </div>   
           
-            <form onSubmit={onSubmit} className="flex flex-col gap-4">
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              const formData = new FormData(e.target);
+              const newItem = Object.fromEntries(formData);
+              onAdd(newItem);
+            }} className="flex flex-col gap-4">
                 {itemType === "materials" ? (
                     <>
                         <input type="text" name="name" placeholder="Material Name" className="border p-2 rounded" required />

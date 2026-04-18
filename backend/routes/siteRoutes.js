@@ -1,6 +1,6 @@
 import express from "express";
 import { userValidation } from "../middleware/authMiddleware.js";
-import { createSite, getSites, getSiteById, addMaterials, addLabours, deleteSite, updateMaterials, updateLabours } from "../controllers/siteController.js";
+import { createSite, getSites, getSiteById, addMaterials, addLabours, deleteSite, updateMaterials, updateLabours,deleteMaterial,deleteLabour } from "../controllers/siteController.js";
 
 const router = express.Router();
 
@@ -16,5 +16,7 @@ router.post("/:siteId/materials", addMaterials);
 router.post("/:siteId/materials/:id", updateMaterials);
 router.post("/:siteId/labour", addLabours);
 router.post("/:siteId/labour/:id", updateLabours);
+router.delete("/:siteId/materials/:itemId", deleteMaterial);
+router.delete("/:siteId/labour/:itemId", deleteLabour);
 
 export default router;

@@ -1,29 +1,32 @@
 import  e from "express";
 import Site from "../models/Site.js";
+import { ObjectId } from "mongodb";
 const router = e.Router();
 
 // Create a new site
 
 async function createSite(req, res) {
     try{
-    const { siteName, location, buget, owner, startDate, endDate, remainingBudget } = req.body;
+
+    console.log(req.body);
+    
+    const { name, location, budget, owner, startDate, endDate} = req.body;
 
     const site = await Site.create({
-        user:req.user.id,
-        siteName,
+        user:req.user?.id,
+        name,
         owner,
-        buget,
+        budget,
         location,
-        remainingBudget,
         startDate,
         endDate,
         Materials:[],
         Labours:[]
     });
-
+    console.log("SAVED:", site);
     res.status(201).json({message: "Site created..... ", site});
     }catch(error){
-        
+    console.error("ERROR:", error); 
     res.status(500).json({message:error.message});
 
     }
@@ -32,8 +35,8 @@ async function createSite(req, res) {
 // Get all sites
 async function getSites(req, res) {
     try{
-        const site = await Site.find({ user: req.user.id });
-        res.status(200).json(site);
+        const site = await Site.find();
+        res.status(200).json({ sites: site });
     }catch(error){
         res.status(500).json({message:error.message});
     }
@@ -42,8 +45,10 @@ async function getSites(req, res) {
 // Get a site by ID
 async function getSiteById(req, res) {
     try{
-        const site = await Site.findById(req.params.id);
-        res.status(200).json(site);
+        const { siteId } = req.params;
+        console.log("Fetching site with ID:", siteId);
+        const site = await Site.findById(siteId);
+        res.status(200).json({ site });
     }catch(error){
         res.status(500).json({message:error.message});
     }
@@ -52,11 +57,12 @@ async function getSiteById(req, res) {
 // Add materials to a site
 async function addMaterials(req, res) {
     try{
-        const site = await Site.findOne({ _id: req.params.id, user: req.user.id }); 
+
+        const {siteId} = req.params;
+        const site = await Site.findOne({ _id: siteId, user: req.user?.id || null }); 
         const { name, quantity, price, brand, dateOfPurchase, dateofPayment, mediumofPayment } = req.body;
 
         site.Materials.push({ name, quantity, price, brand, dateOfPurchase, dateofPayment, mediumofPayment });
-        site.remainingBudget -= quantity * price; 
         await site.save();
         res.status(200).json({ message: "Material added successfully", site });
 
@@ -85,7 +91,8 @@ async function updateMaterials(req, res){
 // Add labour to a site
 async function addLabours(req, res) {
     try{
-        const site = await Site.findOne({ _id: req.params.id, user: req.user.id }); 
+        const {siteId} = req.params;
+        const site = await Site.findOne({ _id: siteId, user: req.user?.id || null }); 
         const { name, salary, date, mediumofPayment } = req.body;
 
         site.Labours.push({ name, salary, date, mediumofPayment });
@@ -117,7 +124,9 @@ async function updateLabours(req, res){
 // Delete a site by ID
 async function deleteSite(req, res) {
     try{
-        await Site.findByIdAndDelete(req.params.id);
+        const { siteId } = req.params;
+        console.log("Deleting site with ID:", siteId);
+        await Site.findByIdAndDelete(siteId);
         res.status(200).json({ message: "Site deleted successfully" });
     }catch(error){
         res.status(500).json({message:error.message});
@@ -127,9 +136,12 @@ async function deleteSite(req, res) {
 // Delete a material from a site
 async function deleteMaterial(req, res) {
     try{
-        const {siteId, materialId} = req.params;
-        const site = await Site.findOne({ _id: siteId, user: req.user.id });
-        site.Materials.id(materialId).remove();
+        const {siteId, itemId} = req.params;
+        console.log("Deleting material with ID:", itemId, "from site ID:", siteId);
+        const site = await Site.findOne({ _id: siteId, user: req.user?.id || null });
+        console.log("Site found for deletion:", site);
+        console.log("Materials before deletion:", site.Materials.id(itemId));
+        site.Materials.pull({ _id: itemId });
         await site.save();
         res.status(200).json({ message: "Material deleted successfully" });
     }catch(error){
@@ -141,9 +153,9 @@ async function deleteMaterial(req, res) {
 // Delete a labour from a site
 async function deleteLabour(req, res) {
     try{
-        const {siteId, labourId} = req.params;
-        const site = await Site.findOne({ _id: siteId, user: req.user.id });
-        site.Labours.id(labourId).remove();
+        const {siteId, itemId} = req.params;
+        const site = await Site.findOne({ _id: siteId, user: req.user?.id || null });
+        site.Labours.pull({ _id: itemId });
         await site.save();
         res.status(200).json({ message: "labour deleted successfully" });
     }catch(error){

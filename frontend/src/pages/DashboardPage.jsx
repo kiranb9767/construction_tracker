@@ -1,23 +1,55 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import Layout from "../components/Layout";
 import CardNameAndNumber from "../features/sites/cardNameAndNumber";
 import SiteCard from "../features/sites/SiteCard";
-import { siteData, siteList } from "../utils/Constants";
+import { siteData} from "../utils/Constants";
 import AddSiteModalForm from "../components/AddSiteModalForm";
 import addIcon from "../asset/add.svg";
 import chatIcon from "../asset/chat.svg";
 import ChatBox from "../features/chatBox";
+
+import { createSite, getSites, deleteSite } from "../services/siteService";
 const DashboardPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [showChat, setShowChat] = useState(false);
-  const [siteListData, setSiteListData] = useState([...siteList]);
+  const [siteListData, setSiteListData] = useState([]);
 
-  const handleAddSite = (newSite) => {
-    setSiteListData((prevList) => [...prevList, newSite]);
+  useEffect(() => {
+    fetchSites();
+  }, []);
+
+
+  const fetchSites = async () => {
+      try {
+        const data = await getSites();
+        console.log("Fetched sites:", data.sites);
+        setSiteListData(data.sites);
+      } catch (error) {
+        console.error("Error fetching sites:", error);
+      }
+    };
+
+  const handleAddSite = async (newSite) => {
+    try {
+      console.log("Sending data:", newSite);
+      const createdSite = await createSite(newSite);
+      console.log("Response from backend:", createdSite.site);
+      setSiteListData((prevList) => [...prevList, createdSite.site]);
+      console.log("Updated site list:",siteListData);
+    } catch (error) {
+      console.error("Error adding site:", error);
+    }
   };
 
-  const handleDelete = (id) => {
-    setSiteListData((prev) => prev.filter((site) => site.id !== id));
+  const handleDelete = async (id) => {
+    try {
+      console.log("Deleting site with ID:", id);
+      await deleteSite(id);
+      console.log("Site deleted successfully");
+      setSiteListData((prev) => prev.filter((site) => site._id !== id));
+    } catch (error) {
+      console.error("Error deleting site:", error);
+    }
   };
 
   return (
@@ -70,9 +102,10 @@ const DashboardPage = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          
           {siteListData.map((site) => {
             return (
-              <SiteCard key={site.id} {...site} handleDelete={handleDelete} />
+              <SiteCard key={site._id} {...site} handleDelete={handleDelete} />
             );
           })}
         </div>

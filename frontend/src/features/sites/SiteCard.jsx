@@ -4,7 +4,7 @@ import ProgressBar from "../../components/ProgressBar";
 import { Link } from "react-router-dom";
 import deleteIcon from "../../asset/delete.svg";
 import viewIcon from "../../asset/view.svg";
-const SiteCard = ({ name, location, budget, spent, id , handleDelete }) => {
+const SiteCard = ({ name, location,owner,startDate, budget, spent, _id , handleDelete }) => {
   const PERCENTAGE = budget === 0 ? 0 : Math.round((spent / budget) * 100);
 
   return (
@@ -15,7 +15,9 @@ const SiteCard = ({ name, location, budget, spent, id , handleDelete }) => {
       <hr className="border-gray-700" />
       <div className="flex flex-col text-left px-2 py-4">
         <div className="py-1">Location: {location}</div>
-        <div className="py-1">Budget: {budget.toLocaleString()}</div>
+        <div className="py-1">Owner: {owner || "Not specified"}</div>
+        <div className="py-1">Start Date: {startDate || "Not specified"}</div>
+        <div className="py-1">Budget: {budget}</div>
         <div className="py-1" >Spent: {spent}</div>
         <div className="py-1">
             Remaining: {budget - spent} 
@@ -28,12 +30,12 @@ const SiteCard = ({ name, location, budget, spent, id , handleDelete }) => {
       </div>
 
         <div className="flex flex-row justify-between px-2 py-4">
-          <Link to={"/site/" + id}>
+          <Link to={"/site/" + _id}>
             <Button className="rounded-full hover:bg-white transition"> 
               <img src={viewIcon} alt="View" className="w-4 h-4 mr-1" />
             </Button>
           </Link> 
-           <Button className="rounded-full hover:bg-white transition" onClick={() => handleDelete(id)}>
+           <Button className="rounded-full hover:bg-white transition" onClick={() => handleDelete(_id)}>
               <img src={deleteIcon} alt="Delete" className="w-4 h-4 " />
           </Button>
         </div>

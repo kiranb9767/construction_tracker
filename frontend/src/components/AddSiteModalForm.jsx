@@ -3,8 +3,10 @@ import React, { useState } from "react";
 const AddSiteModalForm = ({ onClose, onAdd }) => {
   const [formData, setFormData] = useState({
     name: "",
+    owner: "",
     location: "",
     budget: "",
+    startDate: "",
   });
 
   const handleChange = (e) => {
@@ -20,11 +22,14 @@ const AddSiteModalForm = ({ onClose, onAdd }) => {
     e.preventDefault();
 
     const newSite = {
-      id: Date.now(),
       name: formData.name,
       location: formData.location,
       budget: Number(formData.budget),
-      spent: 0,
+      owner: formData.owner,
+      startDate:formData.startDate
+    ? new Date(formData.startDate)
+    : new Date(),
+      remainingBudget: Number(formData.budget),
     };
 
     onAdd(newSite);
@@ -33,16 +38,15 @@ const AddSiteModalForm = ({ onClose, onAdd }) => {
 
   return (
     <div className="fixed bottom-20 right-6 z-50">
-      
       <div className="w-[500px] h-96 bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
-        
         <div className="bg-blue-600 text-white flex justify-between items-center mb-4 px-4 py-2 rounded-tl-lg rounded-tr-lg">
           <span className="text-lg font-semibold">Add Construction</span>
-          <button onClick={onClose} className="text-gray-500">✕</button>
+          <button onClick={onClose} className="text-gray-500">
+            ✕
+          </button>
         </div>
         <hr className="border-gray-700" />
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-
           <input
             type="text"
             name="name"
@@ -62,7 +66,24 @@ const AddSiteModalForm = ({ onClose, onAdd }) => {
             className="border p-2 rounded"
             required
           />
-
+          <input
+            type="date"
+            name="startDate"
+            placeholder="Start Date"
+            value={formData.startDate}
+            onChange={handleChange}
+            className="border p-2 rounded"
+            required
+          />
+          <input
+            type="text"
+            name="owner"
+            placeholder="Owner"
+            value={formData.owner}
+            onChange={handleChange}
+            className="border p-2 rounded"
+            required
+          />
           <input
             type="number"
             name="budget"
@@ -94,7 +115,6 @@ const AddSiteModalForm = ({ onClose, onAdd }) => {
               Add
             </button>
           </div>
-
         </form>
       </div>
     </div>

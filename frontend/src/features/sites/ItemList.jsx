@@ -11,7 +11,7 @@ const ItemList = ({ items, onEdit, onDelete, addItem, itemType }) => {
     <div className="max-h-60 overflow-y-auto pr-2 custom-scrollbar scrollbar-color-blue-500 scrollbar-thickness-2 rounded-x1 shadow-sm border border-red-100 p-3 bg-red-100 ">
       {items.map((item, index) => (
         <div
-          key={item.id}
+          key={item._id}
           className="flex items-center justify-between px-3 py-2 border-b last:border-none hover:bg-red-500 transition"
         >
           <div className="flex items-center gap-2 text-sm text-gray-700 w-full overflow-hidden">
@@ -38,14 +38,14 @@ const ItemList = ({ items, onEdit, onDelete, addItem, itemType }) => {
 
           <div className="flex items-center gap-3 ml-4 shrink-0">
             <button
-              onClick={() => onEdit(itemType, item.id)}
+              onClick={() => onEdit(itemType, item._id)}
               className="text-blue-600 text-xs font-medium hover:underline"
             >
               <img src={editIcon} alt="Edit" className="w-4 h-4" />
             </button>
 
             <button
-              onClick={() => onDelete(itemType, item.id)}
+              onClick={() => onDelete(itemType, item._id)}
               className="text-red-500 text-xs font-medium hover:underline"
             >
               <img src={deleteIcon} alt="Delete" className="w-4 h-4 hover:underline" />
