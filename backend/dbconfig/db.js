@@ -1,10 +1,12 @@
 import mongoose from "mongoose";
+import express from "express";
+import dotenv from "dotenv";
 
-const dbURI = "mongodb://localhost:27017/construction-site-db";
+dotenv.config();
 
 export const connectDB = async () => {
     try{
-        await mongoose.connect(dbURI); 
+        await mongoose.connect(process.env.MONGODB_URI); 
         console.log("Connected to MongoDB");
     }catch (error) {
         console.error("Error connecting to MongoDB:", error);
