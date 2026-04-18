@@ -1,12 +1,12 @@
 import express from "express";
 import { userValidation } from "../middleware/authMiddleware.js";
-const router = express.Router();
-
-
 import { createSite, getSites, getSiteById, addMaterials, addLabours, deleteSite, updateMaterials, updateLabours } from "../controllers/siteController.js";
 
+const router = express.Router();
 
-express.use(userValidation);
+const app = express();
+
+app.use(userValidation);
 
 router.post("/", createSite);
 router.get("/", getSites);

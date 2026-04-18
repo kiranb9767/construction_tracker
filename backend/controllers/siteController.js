@@ -151,4 +151,4 @@ async function deleteLabour(req, res) {
     }
 }
 
-export default { createSite, getSites, getSiteById, addMaterials, addLabours, deleteSite, updateLabours, updateMaterials, deleteMaterial, deleteLabour };
+export { createSite, getSites, getSiteById, addMaterials, updateMaterials, addLabours, updateLabours, deleteSite, deleteMaterial, deleteLabour };
