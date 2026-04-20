@@ -13,6 +13,7 @@ export const addMaterial = async (siteId, materialData) => {
 
 export const updateMaterial = async (siteId, materialId, materialData) => {
     try {
+        console.log("Updating material in service for site ID:", siteId, "material ID:", materialId, "Data:", materialData);
         const response = await API.post(`/sites/${siteId}/materials/${materialId}`, materialData);  
         return response.data;
     } catch (error) {

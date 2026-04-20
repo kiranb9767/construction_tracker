@@ -1,6 +1,5 @@
 import  e from "express";
 import Site from "../models/Site.js";
-import { ObjectId } from "mongodb";
 const router = e.Router();
 
 // Create a new site
@@ -60,9 +59,9 @@ async function addMaterials(req, res) {
 
         const {siteId} = req.params;
         const site = await Site.findOne({ _id: siteId, user: req.user?.id || null }); 
-        const { name, quantity, price, brand, dateOfPurchase, dateofPayment, mediumofPayment } = req.body;
+        const { name, quantity, unit, price, brand, dateOfPurchase, dateOfPayment, mediumofPayment } = req.body;
 
-        site.Materials.push({ name, quantity, price, brand, dateOfPurchase, dateofPayment, mediumofPayment });
+        site.Materials.push({ name, quantity, unit, price, brand, dateOfPurchase, dateOfPayment, mediumofPayment });
         await site.save();
         res.status(200).json({ message: "Material added successfully", site });
 
@@ -76,7 +75,9 @@ async function addMaterials(req, res) {
 async function updateMaterials(req, res){
     try{
         const {siteId, materialId} = req.params;
-        const site = await Site.findOne({ _id: siteId, user: req.user.id });
+
+        console.log("Updating material with ID:", materialId, "for site ID:", siteId, "Data:", req.body);
+        const site = await Site.findOne({ _id: siteId, user: req.user?.id || null });
 
         const material = site.Materials.id(materialId);
         Object.assign(material, req.body);
@@ -93,9 +94,9 @@ async function addLabours(req, res) {
     try{
         const {siteId} = req.params;
         const site = await Site.findOne({ _id: siteId, user: req.user?.id || null }); 
-        const { name, salary, date, mediumofPayment } = req.body;
+        const { name, labourType, salary, date, mediumofPayment } = req.body;
 
-        site.Labours.push({ name, salary, date, mediumofPayment });
+        site.Labours.push({ name, labourType, salary, date, mediumofPayment });
         await site.save();
         res.status(200).json({ message: "Labour added successfully", site });
 
@@ -109,8 +110,8 @@ async function addLabours(req, res) {
 async function updateLabours(req, res){
     try{
         const {siteId, labourId} = req.params;
-        const site = await Site.findOne({ _id: siteId, user: req.user.id });
-
+        const site = await Site.findOne({ _id: siteId, user: req.user?.id || null });
+        console.log("Updating labour with ID:", labourId, "for site ID:", siteId, "Data:", req.body);
         const labour = site.Labours.id(labourId);
         Object.assign(labour, req.body);
         await site.save();

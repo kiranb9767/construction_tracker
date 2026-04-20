@@ -4,18 +4,20 @@ import mongoose from "mongoose";
 const materialSchema = new mongoose.Schema({
     name: { type: String, required: true },
     quantity: { type: Number, required: true },
+    unit: { type: String, required: true },
     price: { type: Number, required: true },
     brand: { type: String, required: true },
-    dateOfPurchase: { type: Date, required: true },
-    dateofPayment: { type: Date, required: true },
+    dateOfPurchase: { type: String, required: true },
+    dateOfPayment: { type: String, required: true },
     mediumofPayment: { type: String, required: true },
 
 });
 
 const labourSchema = new mongoose.Schema({
     name: { type: String, required: true },
+    labourType: { type: String, required: true },
     salary: { type: Number, required: true },
-    date: { type: Date, required: true },
+    date: { type: String, required: true },
     mediumofPayment: { type: String, required: true },
 });
 

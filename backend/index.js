@@ -4,11 +4,19 @@ import cors from "cors";
 import { connectDB } from "./dbconfig/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import siteRoutes from "./routes/siteRoutes.js";
+import chatRoutes from "./routes/chatRoutes.js";
+import { WebSocketServer } from "ws";
+import http from "http";
 
 dotenv.config();
 await connectDB();
 
 const app = express();
+
+const server = http.createServer(app);
+const wss = new WebSocketServer({ server });
+
+chatRoutes(wss);
 
 app.use(cors());
 app.use(express.json());
@@ -21,6 +29,6 @@ app.use("/api/auth", authRoutes);
 app.use("/api/sites", siteRoutes);
 
 
-app.listen(5000, () => {
+server.listen(5000, () => {
   console.log(`Server running on port 5000`);
 });

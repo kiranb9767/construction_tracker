@@ -18,10 +18,11 @@ const  AddItemModelForm = ({ itemType, onClose, onAdd }) => {
                     <>
                         <input type="text" name="name" placeholder="Material Name" className="border p-2 rounded" required />
                         <input type="number" name="quantity" placeholder="Quantity" className="border p-2 rounded" required />
+                        <input type="text" name="unit" placeholder="Unit" className="border p-2 rounded" required />
                         <input type="number" name="price" placeholder="Price" className="border p-2 rounded" required />
                         <input type="text" name="brand" placeholder="Brand" className="border p-2 rounded" required />
-                        <input type="date" name="dateOfPurchase" placeholder="Date of Purchase" className="border p-2 rounded" required />
-                        <input type="date" name="dateofPayment" placeholder="Date of Payment" className="border p-2 rounded" required />
+                        <input type="text" name="dateOfPurchase" placeholder="Date of Purchase" className="border p-2 rounded" required />
+                        <input type="text" name="dateOfPayment" placeholder="Date of Payment" className="border p-2 rounded" required />
                         <select name="mediumofPayment" className="border p-2 rounded" required>
                             <option value="">Select Payment Method</option>
                             <option value="Cash">Cash</option>
@@ -31,8 +32,9 @@ const  AddItemModelForm = ({ itemType, onClose, onAdd }) => {
                 ) : (
                     <>
                         <input type="text" name="name" placeholder="Labour Name" className="border p-2 rounded" required />
+                        <input type="text" name="labourType" placeholder="Labour Type" className="border p-2 rounded" required />
                         <input type="number" name="salary" placeholder="Salary" className="border p-2 rounded" required />
-                        <input type="date" name="date" placeholder="Date" className="border p-2 rounded" required />
+                        <input type="text" name="date" placeholder="Date" className="border p-2 rounded" required />
                         <select name="mediumofPayment" className="border p-2 rounded" required>
                             <option value="">Select Payment Method</option>
                             <option value="Cash">Cash</option>

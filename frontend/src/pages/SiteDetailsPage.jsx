@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Layout from "../components/Layout";
-import { siteList } from "../utils/Constants";
 import CardNameAndNumber from "../features/sites/cardNameAndNumber";
 import ProgressBar from "../components/ProgressBar";
 import Tabber from "../components/Tabber";
 import ItemList from "../features/sites/ItemList";
 import AddItemModelForm from "../components/AddItemModelForm";
+import EditItemModelForm from "../components/EditItemModelForm";
 import DeleteConfirmDialog from "../components/DeleteConfirmDialog";
 
 import BarChartComponent from "../components/BarChart";
@@ -37,14 +37,13 @@ const SiteDetailsPage = () => {
 
   const [showAddForm, setShowAddForm] = useState(false);
 
-
   const handleAddItem = (newItem) => {
     console.log("Adding new item:", newItem);
     if (activeTab === "materials") {
       addMaterial(siteId, newItem)
         .then((response) => {
-          console.log("Material added successfully:", response.site.Materials );
-          setMaterialList((prevList) => [...prevList, ...response.site.Materials ]);
+          console.log("Material added successfully:", response.site.Materials);
+          setMaterialList(response.site.Materials);
           setShowAddForm(false);
         })
         .catch((error) => {
@@ -54,7 +53,7 @@ const SiteDetailsPage = () => {
       addLabour(siteId, newItem)
         .then((response) => {
           console.log("Labour added successfully:", response);
-          setLabourList((prevList) => [...prevList, ...response.site.Labours]);
+          setLabourList(response.site.Labours);
           setShowAddForm(false);
         })
         .catch((error) => {
@@ -63,7 +62,34 @@ const SiteDetailsPage = () => {
     }
   };
 
-  const handleEditItem = (updatedItem) => {};
+  const handleEditItem = (updatedItem) => {
+    console.log("updating  item:", updatedItem);
+    if (activeTab === "materials") {
+      console.log("Updating material with ID:", editItem.itemId, "Data:", updatedItem);
+      updateMaterial(siteId,editItem.itemId,updatedItem)
+        .then((response) => {
+          console.log(
+            "Material updated successfully:",
+            response.site.Materials,
+          );
+          setMaterialList(response.site.Materials);
+          setShowEditForm(false);
+        })
+        .catch((error) => {
+          console.error("Error updating material:", error);
+        });
+    } else {
+      updateLabour(siteId, editItem.itemId,updatedItem)
+        .then((response) => {
+          console.log("Labour updated successfully:", response);
+          setLabourList(response.site.Labours);
+          setShowEditForm(false);
+        })
+        .catch((error) => {
+          console.error("Error updating labour:", error);
+        });
+    }
+  };
 
   const handleDeleteItem = () => {
     console.log("Deleting item:", deleteItem);
@@ -71,10 +97,9 @@ const SiteDetailsPage = () => {
       deleteMaterial(siteId, deleteItem.itemId)
         .then((response) => {
           console.log("Material deleted successfully:", response);
-          setMaterialList((prevList) =>
-            prevList.filter((item) => item.id !== deleteItem.itemId)
-          );
+
           setShowDeleteModal(false);
+          fetchSiteDetails();
         })
         .catch((error) => {
           console.error("Error deleting material:", error);
@@ -83,18 +108,15 @@ const SiteDetailsPage = () => {
       deleteLabour(siteId, deleteItem.itemId)
         .then((response) => {
           console.log("Labour deleted successfully:", response);
-          setLabourList((prevList) =>
-            prevList.filter((item) => item.id !== deleteItem.itemId)
-          );
+
           setShowDeleteModal(false);
+          fetchSiteDetails();
         })
         .catch((error) => {
           console.error("Error deleting labour:", error);
         });
     }
-    fetchSiteDetails();
-  }
-
+  };
 
   const currentList = activeTab === "materials" ? materialList : labourList;
 
@@ -122,11 +144,12 @@ const SiteDetailsPage = () => {
   const onEdit = (itemType, itemId) => {
     console.log("Edit", itemType, itemId);
     setShowEditForm(true);
+    setEditItem({ itemType, itemId });
   };
 
   const onDelete = (itemType, itemId) => {
     console.log("Delete", itemType, itemId);
-    
+
     setDeleteItem({ itemType, itemId });
     setShowDeleteModal(true);
   };
@@ -250,10 +273,11 @@ const SiteDetailsPage = () => {
       )}
 
       {showEditForm && (
-        <AddItemModelForm
+        <EditItemModelForm
           itemType={activeTab}
           onClose={() => setShowEditForm(false)}
-          onAdd={handleEditItem}
+          onUpdate={handleEditItem}
+          initialData={currentList.find((item) => item._id === editItem.itemId)}
         />
       )}
 

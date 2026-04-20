@@ -8,15 +8,15 @@ const SiteCard = ({ name, location,owner,startDate, budget, spent, _id , handleD
   const PERCENTAGE = budget === 0 ? 0 : Math.round((spent / budget) * 100);
 
   return (
-    <div className="bg-card shadow-md rounded-card hover:bg-red-200 transition">
-      <div className="p-2 text-left text-cardTitle font-semibold text-gray-700 ">
+    <div className="bg-white border border-gray-200 rounded-xl shadow-sm hover:bg-gray-300 transition">
+      <div className="px-3 pt-3 pb-2 text-left text-lg font-bold text-gray-800 bg-gray-300 rounded-tl-xl rounded-tr-xl">
         <h4>{name}</h4>
       </div>
-      <hr className="border-gray-700" />
+      <hr className="border-gray-200" />
       <div className="flex flex-col text-left px-2 py-4">
         <div className="py-1">Location: {location}</div>
         <div className="py-1">Owner: {owner || "Not specified"}</div>
-        <div className="py-1">Start Date: {startDate || "Not specified"}</div>
+        <div className="py-1">Start Date: {startDate?.split("T")[0] || "Not specified"}</div>
         <div className="py-1">Budget: {budget}</div>
         <div className="py-1" >Spent: {spent}</div>
         <div className="py-1">

@@ -13,9 +13,9 @@ router.get("/", getSites);
 router.get("/:siteId", getSiteById);
 router.delete("/:siteId", deleteSite);
 router.post("/:siteId/materials", addMaterials);
-router.post("/:siteId/materials/:id", updateMaterials);
+router.post("/:siteId/materials/:materialId", updateMaterials);
 router.post("/:siteId/labour", addLabours);
-router.post("/:siteId/labour/:id", updateLabours);
+router.post("/:siteId/labour/:labourId", updateLabours);
 router.delete("/:siteId/materials/:itemId", deleteMaterial);
 router.delete("/:siteId/labour/:itemId", deleteLabour);
 

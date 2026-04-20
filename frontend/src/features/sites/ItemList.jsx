@@ -19,18 +19,20 @@ const ItemList = ({ items, onEdit, onDelete, addItem, itemType }) => {
             {itemType === "materials" ? (
               <>
                 <span className="font-medium text-gray-900 w-full truncate">{item.name}</span>
-                <span className="w-full">Qty: {item.quantity}</span>
+                <span className="w-full">{item.quantity}</span>
+                <span className="w-full">{item.unit}</span>
                 <span className="w-full text-blue-600 font-medium">{item.price}</span>
                 <span className="w-full truncate">{item.brand}</span>
-                <span className="w-full">{item.dateOfPurchase}</span>
-                <span className="w-full">{item.dateOfPayment}</span>
+                <span className="w-full">{item.dateOfPurchase ? item.dateOfPurchase.split("T")[0] : ""}</span>
+                <span className="w-full">{item.dateOfPayment ? item.dateOfPayment.split("T")[0] : ""}</span>
                 <span className="w-full text-green-600 font-medium">{item.mediumofPayment}</span>
               </>
             ) : (
               <>
                 <span className="font-medium text-gray-900 w-32 truncate">{item.name}</span>
+                <span className="font-medium text-gray-900 w-32 truncate">{item.labourType}</span>
                 <span className="w-20">₹{item.salary}</span>
-                <span className="w-28">{item.date}</span>
+                <span className="w-28">{item.date ? item.date.split("T")[0] : ""}</span>
                 <span className="w-24 text-green-600 font-medium">{item.mediumofPayment}</span>
               </>
             )}

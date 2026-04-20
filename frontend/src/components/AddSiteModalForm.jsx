@@ -7,6 +7,7 @@ const AddSiteModalForm = ({ onClose, onAdd }) => {
     location: "",
     budget: "",
     startDate: "",
+    remainingBudget: "",
   });
 
   const handleChange = (e) => {
@@ -26,9 +27,7 @@ const AddSiteModalForm = ({ onClose, onAdd }) => {
       location: formData.location,
       budget: Number(formData.budget),
       owner: formData.owner,
-      startDate:formData.startDate
-    ? new Date(formData.startDate)
-    : new Date(),
+      startDate:new Date(formData.startDate.split("T")[0]),
       remainingBudget: Number(formData.budget),
     };
 
@@ -37,7 +36,7 @@ const AddSiteModalForm = ({ onClose, onAdd }) => {
   };
 
   return (
-    <div className="fixed bottom-20 right-6 z-50">
+    <div className="fixed bottom-12 right-6 z-50">
       <div className="w-[500px] h-96 bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
         <div className="bg-blue-600 text-white flex justify-between items-center mb-4 px-4 py-2 rounded-tl-lg rounded-tr-lg">
           <span className="text-lg font-semibold">Add Construction</span>
@@ -70,7 +69,7 @@ const AddSiteModalForm = ({ onClose, onAdd }) => {
             type="date"
             name="startDate"
             placeholder="Start Date"
-            value={formData.startDate}
+            value={formData.startDate?.split("T")[0]}
             onChange={handleChange}
             className="border p-2 rounded"
             required
