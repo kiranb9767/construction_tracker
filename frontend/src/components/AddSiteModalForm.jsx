@@ -27,7 +27,7 @@ const AddSiteModalForm = ({ onClose, onAdd }) => {
       location: formData.location,
       budget: Number(formData.budget),
       owner: formData.owner,
-      startDate:new Date(formData.startDate.split("T")[0]),
+      startDate: new Date(formData.startDate.split("T")[0]),
       remainingBudget: Number(formData.budget),
     };
 
@@ -36,8 +36,8 @@ const AddSiteModalForm = ({ onClose, onAdd }) => {
   };
 
   return (
-    <div className="fixed bottom-12 right-6 z-50">
-      <div className="w-[500px] h-96 bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
+    <div className="fixed bottom-[20px] right-6 z-50">
+      <div className="w-[500px] h-100 bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
         <div className="bg-blue-600 text-white flex justify-between items-center mb-4 px-4 py-2 rounded-tl-lg rounded-tr-lg">
           <span className="text-lg font-semibold">Add Construction</span>
           <button onClick={onClose} className="text-gray-500">
@@ -97,7 +97,7 @@ const AddSiteModalForm = ({ onClose, onAdd }) => {
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-xl bg-gray-200 border border-gray-300    hover:ring-2 
+              className="px-4 py-2 rounded-xl bg-gray-200 border border-gray-300   hover:ring-2 
               hover:ring-gray-500 
               hover:ring-offset-2"
             >

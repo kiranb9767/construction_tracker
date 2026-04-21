@@ -28,7 +28,7 @@ const Chat = ({ onClose }) => {
   };
 
   return (
-    <div className="fixed bottom-12 right-6 z-50">
+    <div className="fixed bottom-[110px] right-6 z-50">
       <div className="w-[600px] h-96 bg-white rounded-2xl shadow-xl border border-gray-200 flex flex-col overflow-hidden">
         <div className="bg-green-500 text-white px-6 py-4 flex justify-between items-center">
           <span className="text-sm font-semibold">Chat</span>

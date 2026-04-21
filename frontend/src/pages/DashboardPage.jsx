@@ -66,7 +66,7 @@ const DashboardPage = () => {
       <div className="flex flex-row justify-between">
         <div className="flex items-center justify-between mb-6">
           <div className="flex flex-row">
-            <div className="flex flex-col items-start pl-3 pb-1 border-l-4 border-b-2 border-purple-500">
+            <div className="flex flex-col items-start pl-3 pb-1 border-l-4 border-b-2 border-gray-800">
               <p className="text-3xl font-bold text-gray-800 ml-2">Dashboard</p>
               <h className="text-gray-600 font-serif italic ml-2">
                 Track and manage your construction expenses{" "}
@@ -75,18 +75,20 @@ const DashboardPage = () => {
           </div>
         </div>
 
-        <div className="right-6 flex gap-10 z-50">
+        <div className="right-6 flex gap-5 z-50">
           <div className="group relative flex flex-col items-center">
             <button
               type="button"
-              className="w-12 h-12 bg-gradient-to-r from-purple-400 to-purple-700 rounded-full flex items-center justify-center"
+              className="w-12 h-12 bg-gradient-to-r from-green-400 to-green-700 rounded-full flex items-center justify-center hover:ring-2 
+              hover:ring-green-600 
+              hover:ring-offset-2 transition"
               onClick={() =>
                 showChat ? setShowChat(false) : setShowChat(true)
               }
             >
               <img src={chatIcon} alt="Chat" className="w-6 h-6" />
-            </button>
-            <span className="text-xs bg-gray-600 text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap">
+            </button >
+            <span className="text-xs bg-gray-600 text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap mt-1">
               Chat
             </span>
           </div>
@@ -94,11 +96,13 @@ const DashboardPage = () => {
             <button
               type="button"
               onClick={() => setShowModal(true)}
-              className="w-12 h-12 bg-gradient-to-r from-blue-400 to-blue-700 rounded-full flex items-center justify-center"
+              className="w-12 h-12 bg-gradient-to-r from-blue-400 to-blue-700 rounded-full flex items-center justify-center hover:ring-2 
+              hover:ring-blue-600 
+              hover:ring-offset-2 transition"
             >
               <img src={addIcon} alt="Add" className="w-6 h-6" />
             </button>
-            <span className="text-xs bg-gray-600 text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap">
+            <span className="text-xs bg-gray-600 text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap mt-1">
               Add Site
             </span>
           </div>

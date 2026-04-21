@@ -1,68 +1,116 @@
-import AddItemModelForm from "../../components/AddItemModelForm";
-import { useState } from "react";
 
 import deleteIcon from "../../asset/delete.svg";
 import editIcon from "../../asset/edit.svg";
 
 const ItemList = ({ items, onEdit, onDelete, addItem, itemType }) => {
-
-
   return (
-    <div className="max-h-60 overflow-y-auto pr-2 custom-scrollbar scrollbar-color-blue-500 scrollbar-thickness-2 rounded-x1 shadow-sm border border-red-100 p-3 bg-red-100 ">
-      {items.map((item, index) => (
-        <div
-          key={item._id}
-          className="flex items-center justify-between px-3 py-2 border-b last:border-none hover:bg-red-500 transition"
-        >
-          <div className="flex items-center gap-2 text-sm text-gray-700 w-full overflow-hidden">
-            <span className="w-2 font-medium">{index + 1}</span>
-            {itemType === "materials" ? (
-              <>
-                <span className="font-medium text-gray-900 w-full truncate">{item.name}</span>
-                <span className="w-full">{item.quantity}</span>
-                <span className="w-full">{item.unit}</span>
-                <span className="w-full text-blue-600 font-medium">{item.price}</span>
-                <span className="w-full truncate">{item.brand}</span>
-                <span className="w-full">{item.dateOfPurchase ? item.dateOfPurchase.split("T")[0] : ""}</span>
-                <span className="w-full">{item.dateOfPayment ? item.dateOfPayment.split("T")[0] : ""}</span>
-                <span className="w-full text-green-600 font-medium">{item.mediumofPayment}</span>
-              </>
-            ) : (
-              <>
-                <span className="font-medium text-gray-900 w-32 truncate">{item.name}</span>
-                <span className="font-medium text-gray-900 w-32 truncate">{item.labourType}</span>
-                <span className="w-20">₹{item.salary}</span>
-                <span className="w-28">{item.date ? item.date.split("T")[0] : ""}</span>
-                <span className="w-24 text-green-600 font-medium">{item.mediumofPayment}</span>
-              </>
-            )}
-          </div>
-
-          <div className="flex items-center gap-3 ml-4 shrink-0">
-            <button
-              onClick={() => onEdit(itemType, item._id)}
-              className="text-blue-600 text-xs font-medium hover:underline"
-            >
-              <img src={editIcon} alt="Edit" className="w-4 h-4" />
-            </button>
-
-            <button
-              onClick={() => onDelete(itemType, item._id)}
-              className="text-red-500 text-xs font-medium hover:underline"
-            >
-              <img src={deleteIcon} alt="Delete" className="w-4 h-4 hover:underline" />
-            </button>
-          </div>
-        </div>
-      ))}
-
+    <div className="h-[280px] flex flex-col pr-2 custom-scrollbar scrollbar-color-blue-500 scrollbar-thickness-2 bg-white border border-gray-800 shadow-sm rounded p-4">
       <button
         onClick={() => addItem(itemType)}
-        className="mt-3 w-full py-2 text-sm font-medium bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
+        className="justify-start w-[100px] py-2 mb-3 text-sm font-medium bg-blue-500 text-white rounded-3xl hover:bg-blue-600 transition hover:ring-2 hover:ring-blue-600 hover:ring-offset-2"
       >
-        + Add {itemType === "materials" ? "Material" : "Labour"}
+        + {itemType === "materials" ? "Material" : "Labour"}
       </button>
 
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm text-gray-600">
+          <thead>
+            <tr className="bg-gray-100 text-gray-700 border-b border-gray-200">
+              <th className="px-2 py-2">No</th>
+
+              {itemType === "materials" ? (
+                <>
+                  <th className="px-2 py-2">Name</th>
+                  <th className="px-2 py-2">Qty</th>
+                  <th className="px-2 py-2">Unit</th>
+                  <th className="px-2 py-2">Price</th>
+                  <th className="px-2 py-2">Brand</th>
+                  <th className="px-2 py-2">Purchase</th>
+                  <th className="px-2 py-2">Payment</th>
+                  <th className="px-2 py-2">Mode</th>
+                  <th className="px-2 py-2">Actions</th>
+                </>
+              ) : (
+                <>
+                  <th className="px-2 py-2">Name</th>
+                  <th className="px-2 py-2">Type</th>
+                  <th className="px-2 py-2">Salary</th>
+                  <th className="px-2 py-2">Date</th>
+                  <th className="px-2 py-2">Mode</th>
+                  <th className="px-2 py-2">Actions</th>
+                </>
+              )}
+            </tr>
+          </thead>
+
+          <tbody >
+            {items.map((item, index) => (
+              <tr key={item._id} className="border-b border-gray-100 odd:bg-white even:bg-gray-50 hover:bg-indigo-50 transition">
+                <td className="px-2 py-2">{index + 1}</td>
+
+                {itemType === "materials" ? (
+                  <>
+                    <td className="px-2 py-2">{item.name}</td>
+                    <td className="px-2 py-2">{item.quantity}</td>
+                    <td className="px-2 py-2">{item.unit}</td>
+
+                    <td className="px-2 py-2 text-emerald-600">₹{item.price}</td>
+
+                    <td className="px-2 py-2">{item.brand}</td>
+
+                    <td className="px-2 py-2 text-xs text-gray-500">
+                      {item.dateOfPurchase?.split("T")[0]}
+                    </td>
+
+                    <td className="px-2 py-2 text-xs text-gray-500">
+                      {item.dateOfPayment?.split("T")[0]}
+                    </td>
+
+                    <td className="px-2 py-2 text-green-600 text-xs">
+                      {item.mediumofPayment}
+                    </td>
+                  </>
+                ) : (
+                  <>
+                    <td className="px-2 py-2">{item.name}</td>
+                    <td className="px-2 py-2">{item.labourType}</td>
+
+                    <td className="px-2 py-2 text-indigo-600">
+                      ₹{item.salary}
+                    </td>
+
+                    <td className="px-2 py-2 text-xs text-gray-500">
+                      {item.date?.split("T")[0]}
+                    </td>
+
+                    <td className="px-2 py-2 text-green-600 text-xs">
+                      {item.mediumofPayment}
+                    </td>
+                  </>
+                )}
+
+                <td className="px-2 py-2">
+                  <div className="flex justify-center gap-4">
+                    <button
+                      onClick={() => onEdit(itemType, item._id)}
+                      className="bg-indigo-200 rounded-3xl p-1 hover:ring-1 hover:ring-indigo-800 hover:ring-offset-1 hover:bg-indigo-400 transition  "
+                    >
+                      <img src={editIcon} className="w-4 h-4 justify-center" />
+                    </button>
+
+                    <button
+                      onClick={() => onDelete(itemType, item._id)}
+                      className="bg-red-200 rounded-3xl p-1 hover:ring-1 hover:ring-red-800 hover:ring-offset-1 hover:bg-red-400 transition  "
+                    >
+                      <img src={deleteIcon} className="w-4 h-4 flex justify-center" />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

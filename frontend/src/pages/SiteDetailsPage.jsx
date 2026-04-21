@@ -253,7 +253,7 @@ const SiteDetailsPage = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10 border-t pt-6">
+      <div className="grid grid-cols-2 gap-6 items-start height-[280px]">
         <ItemList
           items={currentList}
           onEdit={onEdit}
@@ -262,6 +262,7 @@ const SiteDetailsPage = () => {
           itemType={activeTab}
         />
         <BarChartComponent data={getExpenseChartData(currentList)} />
+
       </div>
 
       {showAddForm && (
