@@ -11,36 +11,62 @@ import {
 
 const BarChartComponent = ({ data, type }) => {
   return (
-    <ResponsiveContainer width="100%" height="100%" className={"bg-gray-300"}>
-      <BarChart
-        data={data}
-        layout="vertical"
-        margin={{ top: 10, right: 50, left: 0, bottom: 10 }}
-      >
-        <CartesianGrid stroke="#f0f0f0"  />
-        <XAxis type="number" tick={{ fontSize: 10 }} />
-
-        <YAxis
-          type="category"
-          dataKey="name"
-          width={100}
-          tick={{ fontSize: 12 }}
-        />
-
-        <Tooltip formatter={(value) => `₹${(value / 1000).toFixed(0)}K`}
-        contentStyle={{ borderRadius: "100px", outline: "2px dotted #403ae7"}}
-        cursor={false} />
-
-        <Bar
-          dataKey="value"
-          fill="#3a4ddd"
-          radius={[0, 10, 10, 0]}
-          barSize={10}
+    <div className="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm h-full">
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart
+          data={data}
+          layout="horizontal"
+          margin={{ top: 10, right: 40, left: 0, bottom: 10 }}
         >
-          <LabelList dataKey="value" position="right" fontSize={12} />
-        </Bar>
-      </BarChart>
-    </ResponsiveContainer>
+          <CartesianGrid stroke="#e5e7eb" strokeDasharray="3 3" />
+
+          <XAxis
+            type="category"
+            dataKey="name"
+            tick={{ fontSize: 11, fill: "#6b7280" }}
+            axisLine={false}
+            tickLine={false}
+          />
+
+          <YAxis
+            type="number"
+            
+            width={100}
+            tick={{ fontSize: 12, fill: "#374151" }}
+            axisLine={false}
+            tickLine={false}
+          />
+
+          <Tooltip
+            formatter={(value) => `₹${(value / 1000).toFixed(0)}K`}
+            contentStyle={{
+              backgroundColor: "#ffffff",
+              border: "1px solid #e5e7eb",
+              borderRadius: "8px",
+              fontSize: "12px",
+              color: "#111827",
+              boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+            }}
+            cursor={{ fill: "rgba(99,102,241,0.08)" }}
+          />
+
+          <Bar
+            dataKey="value"
+            fill="#6366f1"   
+            radius={[8, 8, 8, 8]}
+            barSize={12}
+          >
+            <LabelList
+              dataKey="value"
+              position="right"
+              fontSize={11}
+              fill="#374151"
+              formatter={(val) => `₹${(val / 1000).toFixed(0)}K`}
+            />
+          </Bar>
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
   );
 };
 

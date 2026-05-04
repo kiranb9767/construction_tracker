@@ -17,7 +17,9 @@ const SiteCard = ({
   const PERCENTAGE = budget === 0 ? 0 : Math.round((spent / budget) * 100);
 
   return (
-    <div className="bg-gray-100 border border-gray-200 rounded-xl shadow-[0_10px_20px_10px_rgba(0,0,0,0.4)] transition">
+<div className="bg-gray-100 border border-gray-200 rounded-xl shadow-[0_0_20px_rgba(0,0,0,2)] transition ">        
+      
+      
       <div className="px-3 pt-3 pb-2 text-left text-lg font-bold text-gray-800 rounded-tl-xl rounded-tr-xl">
         <h4>{name}</h4>
       </div>
@@ -59,7 +61,7 @@ const SiteCard = ({
 
         <div className="flex items-center gap-2 pt-2">
           <ProgressBar percentage={PERCENTAGE} />
-          <div className="w-10 text-right text-xs font-bold text-white">
+          <div className="w-10 text-right text-xs font-bold text-gray-800">
             {PERCENTAGE}%
           </div>
         </div>
@@ -67,8 +69,8 @@ const SiteCard = ({
 
       <div className="flex flex-row justify-between px-2 py-4">
         <Link to={"/site/" + _id}>
-          <Button className="rounded-full hover:ring-2 hover:ring-blue-800 hover:ring-offset-2 transition">
-            <img src={viewIcon} alt="View" className="w-4 h-4 mr-1" />
+          <Button className="rounded-full hover:ring-2 hover:ring-blue-600 hover:ring-offset-2 transition">
+            <img src={viewIcon} alt="View" className="w-4 h-4 mr-1 invert brightness-0" />
           </Button>
         </Link>
         <Button

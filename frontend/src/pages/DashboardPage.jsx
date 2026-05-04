@@ -75,7 +75,7 @@ const DashboardPage = () => {
           </div>
         </div>
 
-        <div className="right-6 flex gap-5 z-50">
+        <div className="fixed right-6 flex gap-5 z-50">
           <div className="group relative flex flex-col items-center">
             <button
               type="button"
@@ -117,7 +117,7 @@ const DashboardPage = () => {
           Sites Overview
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           {siteListData.map((site) => {
             return (
               <SiteCard key={site._id} {...site} handleDelete={handleDelete} />

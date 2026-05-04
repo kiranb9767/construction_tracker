@@ -65,8 +65,13 @@ const SiteDetailsPage = () => {
   const handleEditItem = (updatedItem) => {
     console.log("updating  item:", updatedItem);
     if (activeTab === "materials") {
-      console.log("Updating material with ID:", editItem.itemId, "Data:", updatedItem);
-      updateMaterial(siteId,editItem.itemId,updatedItem)
+      console.log(
+        "Updating material with ID:",
+        editItem.itemId,
+        "Data:",
+        updatedItem,
+      );
+      updateMaterial(siteId, editItem.itemId, updatedItem)
         .then((response) => {
           console.log(
             "Material updated successfully:",
@@ -79,7 +84,7 @@ const SiteDetailsPage = () => {
           console.error("Error updating material:", error);
         });
     } else {
-      updateLabour(siteId, editItem.itemId,updatedItem)
+      updateLabour(siteId, editItem.itemId, updatedItem)
         .then((response) => {
           console.log("Labour updated successfully:", response);
           setLabourList(response.site.Labours);
@@ -195,7 +200,14 @@ const SiteDetailsPage = () => {
         </div>
         <div className="flex flex-row  items-center gap-2 mb-10">
           <Link to={"/"}>
-            <div className="text-blue-500 font-semiBold text-small">Back</div>
+            <div
+              className="w-8 h-8 items-center justify-center bg-blue-500 text-white rounded-full text-xl font-bold
+                         hover:bg-blue-600 
+                         hover:ring-2 hover:ring-blue-600 hover:ring-offset-2 hover:ring-offset-white
+                         transition"
+            >
+              ←
+            </div>
           </Link>
           <div className="">|</div>
           <div className="text-sectionTitle font-bold text-black text-left">
@@ -248,8 +260,9 @@ const SiteDetailsPage = () => {
           onChange={(value) => setActiveTab(value)}
         />
 
-        <div className="font-medium mt-4 text-left max-w-100 flex gap-8 border-b border-gray-500 mb-4">
-          {activeTab.toUpperCase()} Expense Analytics
+        <div className="font-small mt-4 text-center flex border-b border-gray-500 mb-4">
+          {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Expense
+          Analytics
         </div>
       </div>
 
@@ -262,7 +275,6 @@ const SiteDetailsPage = () => {
           itemType={activeTab}
         />
         <BarChartComponent data={getExpenseChartData(currentList)} />
-
       </div>
 
       {showAddForm && (

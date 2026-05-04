@@ -36,23 +36,30 @@ const AddSiteModalForm = ({ onClose, onAdd }) => {
   };
 
   return (
-    <div className="fixed bottom-[20px] right-6 z-50">
-      <div className="w-[500px] h-100 bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
-        <div className="bg-blue-600 text-white flex justify-between items-center mb-4 px-4 py-2 rounded-tl-lg rounded-tr-lg">
-          <span className="text-lg font-semibold">Add Construction</span>
-          <button onClick={onClose} className="text-gray-500">
-            ✕
-          </button>
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
+      <div
+        className="w-full max-w-md rounded-2xl overflow-hidden
+        bg-gradient-to-b from-[#2f2f2f] to-[#3a3a3a]
+        border border-gray-600/50
+        shadow-[0_25px_70px_rgba(0,0,0,0.6)]"
+      >
+        <div
+          className="px-5 py-4 flex justify-between items-center
+          bg-gradient-to-r from-[#3a3a3a]/80 to-[#2f2f2f]/80
+          border-b border-gray-600/40"
+        >
+          <h2 className="text-sm font-semibold text-gray-100 tracking-wide">
+            Add Site
+          </h2>
         </div>
-        <hr className="border-gray-700" />
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4 p-6">
           <input
             type="text"
             name="name"
             placeholder="Site Name"
             value={formData.name}
             onChange={handleChange}
-            className="border p-2 rounded"
+            className="inputDarkPremium"
             required
           />
 
@@ -62,7 +69,7 @@ const AddSiteModalForm = ({ onClose, onAdd }) => {
             placeholder="Location"
             value={formData.location}
             onChange={handleChange}
-            className="border p-2 rounded"
+            className="inputDarkPremium"
             required
           />
           <input
@@ -71,7 +78,7 @@ const AddSiteModalForm = ({ onClose, onAdd }) => {
             placeholder="Start Date"
             value={formData.startDate?.split("T")[0]}
             onChange={handleChange}
-            className="border p-2 rounded"
+            className="inputDarkPremium"
             required
           />
           <input
@@ -80,7 +87,7 @@ const AddSiteModalForm = ({ onClose, onAdd }) => {
             placeholder="Owner"
             value={formData.owner}
             onChange={handleChange}
-            className="border p-2 rounded"
+            className="inputDarkPremium"
             required
           />
           <input
@@ -89,11 +96,11 @@ const AddSiteModalForm = ({ onClose, onAdd }) => {
             placeholder="Budget"
             value={formData.budget}
             onChange={handleChange}
-            className="border p-2 rounded"
+            className="inputDarkPremium"
             required
           />
 
-          <div className="flex justify-end gap-5 mt-10 ">
+          <div className="flex justify-end gap-5  p-2">
             <button
               type="button"
               onClick={onClose}
@@ -106,6 +113,7 @@ const AddSiteModalForm = ({ onClose, onAdd }) => {
 
             <button
               type="submit"
+              onClick={onAdd}
               className="px-4 py-2 bg-blue-600 text-white rounded-xl  
               hover:ring-2 
               hover:ring-blue-500 
