@@ -7,11 +7,13 @@ import AddSiteModalForm from "../components/AddSiteModalForm";
 import addIcon from "../asset/add.svg";
 import chatIcon from "../asset/chat.svg";
 import ChatBox from "../features/chatBox";
+import { useNavigate } from "react-router-dom";
 
 import { createSite, getSites, deleteSite } from "../services/siteService";
 const DashboardPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [showChat, setShowChat] = useState(false);
+  const navigate = useNavigate();
   const [siteListData, setSiteListData] = useState([]);
 
   useEffect(() => {
@@ -66,58 +68,54 @@ const DashboardPage = () => {
       <div className="flex flex-row justify-between">
         <div className="flex items-center justify-between mb-6">
           <div className="flex flex-row">
-            <div className="flex flex-col items-start pl-3 pb-1 border-l-4 border-b-2 border-gray-800">
-              <p className="text-3xl font-bold text-gray-800 ml-2">Dashboard</p>
-              <h className="text-gray-600 font-serif italic ml-2">
+            <div className="flex flex-col items-start pb-1 pl-3 border-b-2 border-l-4 border-gray-800">
+              <p className="ml-2 text-3xl font-bold text-gray-800">Dashboard</p>
+              <h className="ml-2 font-serif italic text-gray-600">
                 Track and manage your construction expenses{" "}
               </h>
             </div>
           </div>
         </div>
 
-        <div className="fixed right-6 flex gap-5 z-50">
-          <div className="group relative flex flex-col items-center">
+        <div className="flex flex-wrap gap-2 px-4 py-4 right-2 backdrop-blur-sm">
+          <div className="relative flex flex-col items-center group ">
             <button
               type="button"
-              className="w-12 h-12 bg-gradient-to-r from-green-400 to-green-700 rounded-full flex items-center justify-center hover:ring-2 
-              hover:ring-green-600 
-              hover:ring-offset-2 transition"
+              className="flex items-center justify-center w-12 h-12 transition rounded-full bg-gradient-to-r from-green-400 to-green-700 hover:ring-2 hover:ring-green-600 hover:ring-offset-2"
               onClick={() =>
                 showChat ? setShowChat(false) : setShowChat(true)
               }
             >
               <img src={chatIcon} alt="Chat" className="w-6 h-6" />
-            </button >
-            <span className="text-xs bg-gray-600 text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap mt-1">
+            </button>
+            <span className="px-2 py-1 mt-1 text-xs text-white transition bg-gray-600 rounded opacity-0 group-hover:opacity-100 whitespace-nowrap">
               Chat
             </span>
           </div>
-          <div className="group relative flex flex-col items-center">
+          <div className="relative flex flex-col items-center group">
             <button
               type="button"
               onClick={() => setShowModal(true)}
-              className="w-12 h-12 bg-gradient-to-r from-blue-400 to-blue-700 rounded-full flex items-center justify-center hover:ring-2 
-              hover:ring-blue-600 
-              hover:ring-offset-2 transition"
+              className="flex items-center justify-center w-12 h-12 transition rounded-full bg-gradient-to-r from-blue-400 to-blue-700 hover:ring-2 hover:ring-blue-600 hover:ring-offset-2"
             >
               <img src={addIcon} alt="Add" className="w-6 h-6" />
             </button>
-            <span className="text-xs bg-gray-600 text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap mt-1">
+            <span className="px-2 py-1 mt-1 text-xs text-white transition bg-gray-600 rounded opacity-0 group-hover:opacity-100 whitespace-nowrap">
               Add Site
             </span>
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6 max-w-2xl">
+      <div className="grid max-w-2xl grid-cols-1 gap-4 mt-6 sm:grid-cols-2">
         <CardNameAndNumber name="Total Sites" value={totalSites} />
         <CardNameAndNumber name="Total Spend" value={`₹${totalSpend}`} />
       </div>
       <div>
-        <div className="text-sectionTitle font-bold text-black mb-4 mt-4 text-left">
+        <div className="mt-4 mb-4 font-bold text-left text-black text-sectionTitle">
           Sites Overview
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+        <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3">
           {siteListData.map((site) => {
             return (
               <SiteCard key={site._id} {...site} handleDelete={handleDelete} />

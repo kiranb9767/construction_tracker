@@ -1,0 +1,308 @@
+import React, { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import Layout from "../components/Layout";
+import CardNameAndNumber from "../features/sites/cardNameAndNumber";
+import ProgressBar from "../components/ProgressBar";
+import Tabber from "../components/Tabber";
+import ItemList from "../features/sites/ItemList";
+import AddItemModelForm from "../components/AddItemModelForm";
+import EditItemModelForm from "../components/EditItemModelForm";
+import DeleteConfirmDialog from "../components/DeleteConfirmDialog";
+
+import BarChartComponent from "../components/BarChart";
+import { getSiteById } from "../services/siteService";
+import {
+  addMaterial,
+  addLabour,
+  updateLabour,
+  updateMaterial,
+  deleteLabour,
+  deleteMaterial,
+} from "../services/expenseService";
+
+const SiteDetailsPage = () => {
+  const { siteId } = useParams();
+  console.log("Site ID from URL:", siteId);
+  const [curSiteDetail, setCurSiteDetail] = useState(null);
+  const [activeTab, setActiveTab] = useState("materials");
+
+  const [materialList, setMaterialList] = useState([]);
+  const [labourList, setLabourList] = useState([]);
+
+  const [showEditForm, setShowEditForm] = useState(false);
+  const [editItem, setEditItem] = useState(null);
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteItem, setDeleteItem] = useState(null);
+
+  const [showAddForm, setShowAddForm] = useState(false);
+
+  const handleAddItem = (newItem) => {
+    console.log("Adding new item:", newItem);
+    if (activeTab === "materials") {
+      addMaterial(siteId, newItem)
+        .then((response) => {
+          console.log("Material added successfully:", response.site.Materials);
+          setMaterialList(response.site.Materials);
+          setShowAddForm(false);
+        })
+        .catch((error) => {
+          console.error("Error adding material:", error);
+        });
+    } else {
+      addLabour(siteId, newItem)
+        .then((response) => {
+          console.log("Labour added successfully:", response);
+          setLabourList(response.site.Labours);
+          setShowAddForm(false);
+        })
+        .catch((error) => {
+          console.error("Error adding labour:", error);
+        });
+    }
+  };
+
+  const handleEditItem = (updatedItem) => {
+    console.log("updating  item:", updatedItem);
+    if (activeTab === "materials") {
+      console.log(
+        "Updating material with ID:",
+        editItem.itemId,
+        "Data:",
+        updatedItem,
+      );
+      updateMaterial(siteId, editItem.itemId, updatedItem)
+        .then((response) => {
+          console.log(
+            "Material updated successfully:",
+            response.site.Materials,
+          );
+          setMaterialList(response.site.Materials);
+          setShowEditForm(false);
+        })
+        .catch((error) => {
+          console.error("Error updating material:", error);
+        });
+    } else {
+      updateLabour(siteId, editItem.itemId, updatedItem)
+        .then((response) => {
+          console.log("Labour updated successfully:", response);
+          setLabourList(response.site.Labours);
+          setShowEditForm(false);
+        })
+        .catch((error) => {
+          console.error("Error updating labour:", error);
+        });
+    }
+  };
+
+  const handleDeleteItem = () => {
+    console.log("Deleting item:", deleteItem);
+    if (activeTab === "materials") {
+      deleteMaterial(siteId, deleteItem.itemId)
+        .then((response) => {
+          console.log("Material deleted successfully:", response);
+
+          setShowDeleteModal(false);
+          fetchSiteDetails();
+        })
+        .catch((error) => {
+          console.error("Error deleting material:", error);
+        });
+    } else {
+      deleteLabour(siteId, deleteItem.itemId)
+        .then((response) => {
+          console.log("Labour deleted successfully:", response);
+
+          setShowDeleteModal(false);
+          fetchSiteDetails();
+        })
+        .catch((error) => {
+          console.error("Error deleting labour:", error);
+        });
+    }
+  };
+
+  const currentList = activeTab === "materials" ? materialList : labourList;
+
+  const fetchSiteDetails = async () => {
+    try {
+      console.log("Fetching details for site ID:", siteId);
+      console.log("type of siteId:", typeof siteId);
+      const data = await getSiteById(siteId);
+      console.log("API response for site details:", data);
+      const site = data.site;
+      console.log("Site details fetched:", site.Materials);
+      setCurSiteDetail(site);
+      setLabourList(site.Labours);
+      setMaterialList(site.Materials);
+    } catch (error) {
+      console.error("Error fetching site details:", error);
+    }
+  };
+
+  // const PERCENTAGE = budget === 0 ? 0 : Math.round((spent / budget) * 100);
+  useEffect(() => {
+    fetchSiteDetails();
+  }, [siteId]);
+
+  const onEdit = (itemType, itemId) => {
+    console.log("Edit", itemType, itemId);
+    setShowEditForm(true);
+    setEditItem({ itemType, itemId });
+  };
+
+  const onDelete = (itemType, itemId) => {
+    console.log("Delete", itemType, itemId);
+
+    setDeleteItem({ itemType, itemId });
+    setShowDeleteModal(true);
+  };
+
+  const addItem = (itemType) => {
+    console.log("Add new", itemType);
+    setShowAddForm(true);
+  };
+
+  const getExpenseChartData = (itemList) => {
+    const map = {};
+    console.log("Generating chart data for:", itemList);
+    if (activeTab === "materials") {
+      itemList.forEach((item) => {
+        const total = item.quantity * item.price;
+
+        if (map[item.name]) {
+          map[item.name] += total;
+        } else {
+          map[item.name] = total;
+        }
+      });
+    } else {
+      itemList.forEach((item) => {
+        if (map[item.name]) {
+          map[item.name] += item.salary;
+        } else {
+          map[item.name] = item.salary;
+        }
+      });
+    }
+    return Object.keys(map).map((key) => ({
+      name: key,
+      value: map[key],
+    }));
+  };
+
+  return (
+    <Layout>
+      <div className="">
+        <div className="text-sectionTitle font-bold text-black mb-4 text-left">
+          Site Expense Details
+        </div>
+        <div className="flex flex-row  items-center gap-2 mb-10">
+          <Link to={"/"}>
+            <div
+              className="w-8 h-8 items-center justify-center bg-blue-500 text-white rounded-full text-xl font-bold
+                         hover:bg-blue-600 
+                         hover:ring-2 hover:ring-blue-600 hover:ring-offset-2 hover:ring-offset-white
+                         transition"
+            >
+              ←
+            </div>
+          </Link>
+          <div className="">|</div>
+          <div className="text-sectionTitle font-bold text-black text-left">
+            {curSiteDetail && curSiteDetail.name}
+          </div>
+        </div>
+
+        {curSiteDetail && (
+          <>
+            <div className="grid grid-cols-3 sm:grid-cols-2: xs:grid-cols-1 gap-4">
+              <CardNameAndNumber name="Budget" value={curSiteDetail.budget} />
+              <CardNameAndNumber name="Spent" value={curSiteDetail.spent} />
+              <CardNameAndNumber
+                name="Remaining"
+                value={curSiteDetail.budget - curSiteDetail.spent}
+              />
+            </div>
+
+            <div className="mt-4">
+              <ProgressBar
+                percentage={
+                  curSiteDetail.budget === 0
+                    ? 0
+                    : Math.round(
+                        (curSiteDetail.spent / curSiteDetail.budget) * 100,
+                      )
+                }
+              />
+
+              <div className="">
+                {curSiteDetail.budget === 0
+                  ? 0
+                  : Math.round(
+                      (curSiteDetail.spent / curSiteDetail.budget) * 100,
+                    )}{" "}
+                % Spent
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
+        <Tabber
+          tabs={[
+            { label: "Materials", value: "materials" },
+            { label: "Labour", value: "labour" },
+          ]}
+          activeTab={activeTab}
+          onChange={(value) => setActiveTab(value)}
+        />
+
+        <div className="font-small mt-4 text-center flex border-b border-gray-500 mb-4">
+          {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Expense
+          Analytics
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-6 items-start height-[280px]">
+        <ItemList
+          items={currentList}
+          onEdit={onEdit}
+          onDelete={onDelete}
+          addItem={addItem}
+          itemType={activeTab}
+        />
+        <BarChartComponent data={getExpenseChartData(currentList)} />
+      </div>
+
+      {showAddForm && (
+        <AddItemModelForm
+          itemType={activeTab}
+          onClose={() => setShowAddForm(false)}
+          onAdd={handleAddItem}
+        />
+      )}
+
+      {showEditForm && (
+        <EditItemModelForm
+          itemType={activeTab}
+          onClose={() => setShowEditForm(false)}
+          onUpdate={handleEditItem}
+          initialData={currentList.find((item) => item._id === editItem.itemId)}
+        />
+      )}
+
+      {showDeleteModal && (
+        <DeleteConfirmDialog
+          itemType={activeTab}
+          onClose={() => setShowDeleteModal(false)}
+          onSubmit={handleDeleteItem}
+        />
+      )}
+    </Layout>
+  );
+};
+
+export default SiteDetailsPage;

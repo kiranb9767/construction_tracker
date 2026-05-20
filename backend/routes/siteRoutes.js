@@ -4,9 +4,7 @@ import { createSite, getSites, getSiteById, addMaterials, addLabours, deleteSite
 
 const router = express.Router();
 
-const app = express();
-
-app.use(userValidation);
+router.use(userValidation);
 
 router.post("/", createSite);
 router.get("/", getSites);

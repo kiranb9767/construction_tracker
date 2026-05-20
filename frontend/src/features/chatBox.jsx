@@ -64,7 +64,7 @@ const Chat = ({ onClose }) => {
             type="text"
             placeholder="Type your message..."
             className="flex-1 bg-[#2a3942] rounded-lg px-3 py-2 text-sm text-white
-            hover:ring-2 
+              hover:ring-2 
               hover:ring-gray-600 
               hover:ring-offset-1
               transition"

@@ -209,7 +209,6 @@ const SiteDetailsPage = () => {
               ←
             </div>
           </Link>
-          <div className="">|</div>
           <div className="text-sectionTitle font-bold text-black text-left">
             {curSiteDetail && curSiteDetail.name}
           </div>
