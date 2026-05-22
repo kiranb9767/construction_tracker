@@ -1,9 +1,11 @@
+import dotenv from "dotenv";
 
+dotenv.config();
 
 let socket = null;
 
 export const connectSocket = (onMessage) => {
-  socket = new WebSocket("ws://localhost:5000");
+  socket = new WebSocket(process.env.REACT_APP_WS_URL);
 
   socket.onopen = () => {
     console.log("WS Connected");
