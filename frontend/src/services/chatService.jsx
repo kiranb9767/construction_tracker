@@ -2,7 +2,7 @@
 let socket = null;
 
 export const connectSocket = (onMessage) => {
-  socket = new WebSocket(process.env.REACT_APP_WS_URL);
+  socket = new WebSocket(`${process.env.REACT_APP_API_URL}/api`);
 
   socket.onopen = () => {
     console.log("WS Connected");
